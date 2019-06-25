@@ -1,51 +1,41 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
-import styled from 'styled-components';
+const firebaseConfig = {
+  apiKey: 'AIzaSyB-IyC-7W_Gs_j0qYp2UwGDe0yeT9y0DIs',
+  authDomain: 'intro-to-cloud-function.firebaseapp.com',
+  databaseURL: 'https://intro-to-cloud-function.firebaseio.com',
+  projectId: 'intro-to-cloud-function',
+  storageBucket: 'intro-to-cloud-function.appspot.com',
+  messagingSenderId: '297554731793',
+  appId: '1:297554731793:web:972b4403f59d09b8',
+};
 
-const Title = styled.h1`
-  color: black;
-  font-size: 2.5rem;
-  background-color: pink;
-`;
+firebase.initializeApp(firebaseConfig);
 
-const F = () => <Title>React Bolt</Title>;
+const App = () => {
+  const uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+    signInSuccessUrl: '/signedIn',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+  };
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: '' };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          aa:
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-
-        <F />
-      </form>
-    );
-  }
-}
+  return (
+    <div>
+      <h1>My App</h1>
+      <p>Please sign-in:</p>
+      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+    </div>
+  );
+};
 
 export default hot(module)(App);
